@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>랜덤 숫자 뽑기</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        div {
+            margin: 10px;
+        }
+
+        * {
+            font-family: 'Gamja Flower', cursive;
+            font-weight: bold;
+            font-size: 25px;
+        }
+
+        .backgroud {
+            width: 100%;
+            height: 100%;
+            background-color: antiquewhite;
+            display: flex;
+            align-items: center;
+        }
+
+        #container {
+            width: 800px;
+            height: auto;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #title {
+            font-size: 50px;
+            margin: auto;
+        }
+
+        #btn-start {
+            margin: auto;
+        }
+
+        .btn {
+            font-size: 30px;
+            margin: auto;
+        }
+
+        .form-control {
+            width: 100px;
+        }
+
+        .col-xs-2 {
+            display: flex;
+            align-items: center;
+        }
+
+        .col-xs-2-cs {
+            display: flex;
+            align-items: center;
+        }
+
+        #random-result {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            overflow: auto;
+            justify-content: space-evenly;
+        }
+
+        .random-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 30px;
+            margin: 10px;
+            text-align: center;
+            font-size: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-cs {
+            margin: auto;
+        }
+    </style>
+
+    <script>
+        function returnPage() {
+            window.location.reload();
+        }
+
+        function clickStart() {
+            $('#title').remove();
+            $('#btn-start').remove();
+            let tempHtml = `<div class="col-xs-2">
+                                    <input type="text" id="startNumber" class="form-control" placeholder="From"
+                                           aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    &nbsp;~&nbsp;
+                                    <input type="text" id="endNumber" class="form-control" placeholder="To"
+                                           aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    &nbsp; 사이에서 숫자를 선택할께요.
+                                </div>
+
+                                <div class="col-xs-2-cs">
+                                    <input type="text" id="selectingNumber" class="form-control"
+                                           aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    &nbsp; 선택할 갯수를 입력하세요.
+                                </div>
+
+                                <div class="col-xs-2-cs">
+                                    <input type="text" id="excludeNumber" class="form-control"
+                                           aria-label="Recipient's username" aria-describedby="button-addon2">
+                                    &nbsp; 번은 제외하고 선택할께요.
+                                </div>
+                                <div class="col-xs-2-cs">
+                                    여러 개 제외 시 콤마(,)로 구분. ex) 3, 4
+                                </div>`;
+
+            tempHtml += `<div class="col-xs-2-cs">
+                            <div class="btn-cs">
+                                <button type="button" class="btn btn-primary" onclick="startRamdom()">뽑기</button>
+                                <button type="button" class="btn btn-primary" onclick="returnPage()">처음으로</button>
+                            </div>
+                         </div>`;
+            $('#main-page').append(tempHtml);
+        }
+
+        function startRamdom() {
+            const startNumber = $('#startNumber');
+            if (startNumber.val() === '') {
+                alert('시작 숫자를 입력해주세요!');
+                startNumber.focus();
+                return;
+            } else {
+                if (!/[0-9]/.test(startNumber.val())) {
+                    alert('숫자만 입력 가능합니다!');
+                    startNumber.focus();
+                    return;
+                }
+            }
+
+            const endNumber = $('#endNumber');
+            if (endNumber.val() === '') {
+                alert('끝나는 숫자를 입력해주세요!');
+                endNumber.focus();
+                return;
+            } else {
+                if (!/[0-9]/.test(endNumber.val())) {
+                    alert('숫자만 입력 가능합니다!');
+                    endNumber.focus();
+                    return;
+                }
+            }
+
+            if( parseInt(endNumber.val()) <= parseInt(startNumber.val()) ) {
+                alert('끝나는 숫자가 시작 숫자보다 더 커야 합니다!');
+                startNumber.focus();
+                return;
+            }
+
+            const selectingNumber = $('#selectingNumber');
+            if (selectingNumber.val() === '') {
+                alert('몇 개의 숫자를 뽑으실건지 입력해주세요!');
+                selectingNumber.focus();
+                return;
+            } else {
+                if (!/[0-9]/.test(selectingNumber.val())) {
+                    alert('숫자만 입력 가능합니다!');
+                    selectingNumber.focus();
+                    return;
+                }
+            }
+
+            let excludeNumberCount = 0;
+            let excludeNumber = $('#excludeNumber').val();
+            let excludeNumbers;
+            if (excludeNumber != '') {
+                excludeNumber = excludeNumber.replaceAll(" ", "");
+                //빈값으로 배열이 생기는 것 방지
+                if( "," === excludeNumber.substring(excludeNumber.length - 1, excludeNumber.length) ){
+                    excludeNumber = excludeNumber.slice(0, -1);
+                }
+                excludeNumbers = excludeNumber.split(",");
+                excludeNumberCount = excludeNumbers.length;
+
+                for (let i = 0; i < excludeNumbers.length; i++) {
+                    if (!/[0-9]/.test(excludeNumbers[i])) {
+                        alert('숫자만 입력 가능합니다!');
+                        $('#excludeNumber').focus();
+                        return;
+                    }
+                }
+            }
+
+            if( (parseInt(endNumber.val()) - parseInt(startNumber.val()) + 1 - parseInt(excludeNumberCount)) < parseInt(selectingNumber.val()) ) {
+                alert('지정된 범위 안에서 선택할 수 있는 갯수가 초과되었습니다! 지정된 범위나 선택할 갯수를 다시 지정해주세요!');
+                return;
+            }
+
+            let randomIndexArray = [];
+            for (let i = 0; i < selectingNumber.val(); i++) {  // 몇 개의 숫자를 뽑겠다.
+                const randomNum = Math.floor(Math.random() * endNumber.val() + 1);
+
+                if (randomIndexArray.indexOf(randomNum) === -1 && randomNum >= startNumber.val()) {
+                    if (excludeNumber != '') {
+                        if (excludeNumbers.indexOf(randomNum.toString()) === -1) {
+                            randomIndexArray.push(randomNum);
+                        } else {
+                            i--;
+                        }
+                    } else {
+                        randomIndexArray.push(randomNum);
+                    }
+                } else {
+                    i--;
+                }
+            }
+
+            let tempHtml = '';
+            for (let i = 0; i < randomIndexArray.length; i++) {
+                const colorCode = '#' + Math.round(Math.random() * 0xffffff).toString(16);
+                tempHtml += `<div class="random-number" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
+            }
+            $('#random-result').empty();
+            $('#random-result').append(tempHtml);
+        }
+    </script>
+</head>
+<body>
+<div class="backgroud">
+    <div class="backgroud" id="container">
+        <div id="title">랜덤 숫자 뽑기</div>
+        <div id="btn-start">
+            <button type="button" class="btn btn-primary" onclick="clickStart()">시작하기</button>
+        </div>
+
+        <div id="main-page"></div>
+        <div id="random-result"></div>
+        <div id="bottom-page"></div>
+    </div>
+</div>
+</body>
+</html>
