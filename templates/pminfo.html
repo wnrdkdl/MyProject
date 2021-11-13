@@ -18,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
 
+
     <style>
         html, body {
             width: 100%;
@@ -95,7 +96,7 @@
             justify-content: space-evenly;
         }
 
-        .random-number {
+        [id*="random-number"] {
             width: 50px;
             height: 50px;
             border-radius: 30px;
@@ -106,6 +107,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            text-shadow: 1px 1px 5px #000;
         }
 
         .btn-cs {
@@ -141,15 +143,14 @@
     </style>
 
     <script>
-
         $(document).ready( function () {
-
-            $('body').on('mouseover', '#random-number', function () {
-                 alert("!!!!");
+            $('#title').tooltip();
+            $('body').on('mouseover', '#random-result', function () {
+                $('.test').tooltip();
             });
 
-
         });
+
         function returnPage() {
             window.location.reload();
         }
@@ -343,7 +344,7 @@
             let randomNumberMean = [];
             for (let i = 0; i < randomIndexArray.length; i++) {
                 const colorCode = '#' + Math.round(Math.random() * 0xffffff).toString(16);
-                tempHtml += `<div class="random-number" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
+                tempHtml += `<div id="random-number${i}" class="test" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
 
                 $.ajax({
                     type: "GET",
@@ -351,13 +352,10 @@
                     data: {},
                     success: function (response) {
                         randomNumberMean[i] = response;
-                        console.log("!!!!" + randomNumberMean[i]);
+                        $('#random-number' + i ).attr('title', randomNumberMean[i]);
                     },
                 });
             }
-
-            console.log(randomNumberMean);
-
 
             $('#random-result').empty();
             $('#random-result').append(tempHtml);
@@ -383,7 +381,7 @@
 <body>
 <div class="backgroud">
     <div class="backgroud" id="container">
-        <div id="title">랜덤 숫자 뽑기</div>
+        <div id="title" title="dfdfdfddd">랜덤 숫자 뽑기</div>
         <div id="btn-start">
             <button type="button" class="btn btn-primary" onclick="clickStart()">시작하기</button>
         </div>
