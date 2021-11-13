@@ -141,6 +141,15 @@
     </style>
 
     <script>
+
+        $(document).ready( function () {
+
+            $('body').on('mouseover', '#random-number', function () {
+                 alert("!!!!");
+            });
+
+
+        });
         function returnPage() {
             window.location.reload();
         }
@@ -233,7 +242,7 @@
                                         <p class="card-text"><span id="pmtype">${pmtype}</span>&nbsp;&nbsp;${price}</p>
                                     </div>
                                 </div>`;
-            if( cnt === 0 ) {
+            if (cnt === 0) {
                 $('#pminfo').empty();
             }
             $('#pminfo').append(tempHtml);
@@ -331,10 +340,24 @@
             }
 
             let tempHtml = '';
+            let randomNumberMean = [];
             for (let i = 0; i < randomIndexArray.length; i++) {
                 const colorCode = '#' + Math.round(Math.random() * 0xffffff).toString(16);
                 tempHtml += `<div class="random-number" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
+
+                $.ajax({
+                    type: "GET",
+                    url: "http://numbersapi.com/" + randomIndexArray[i],
+                    data: {},
+                    success: function (response) {
+                        randomNumberMean[i] = response;
+                        console.log("!!!!" + randomNumberMean[i]);
+                    },
+                });
             }
+
+            console.log(randomNumberMean);
+
 
             $('#random-result').empty();
             $('#random-result').append(tempHtml);
