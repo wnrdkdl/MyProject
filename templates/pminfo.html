@@ -140,14 +140,26 @@
         #pmtype {
             background-color: yellow;
         }
+
+        .tooltip{
+            pointer-events: none;
+           /* position: absolute;
+            z-index: -1;*/
+
+
+            /*bottom: 100%;
+            left: 50%;
+            margin-left: 200px;*/
+        }
     </style>
 
     <script>
         $(document).ready( function () {
-            $('#title').tooltip();
-            $('body').on('mouseover', '#random-result', function () {
-                $('.test').tooltip();
-            });
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"]',
+                //position: { my: "left+1100 center", at: "right center" }
+            })
+
 
         });
 
@@ -344,7 +356,7 @@
             let randomNumberMean = [];
             for (let i = 0; i < randomIndexArray.length; i++) {
                 const colorCode = '#' + Math.round(Math.random() * 0xffffff).toString(16);
-                tempHtml += `<div id="random-number${i}" class="test" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
+                tempHtml += `<div id="random-number${i}" data-placement="top" data-toggle="tooltip" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
 
                 $.ajax({
                     type: "GET",
