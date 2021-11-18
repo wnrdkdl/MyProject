@@ -12,15 +12,15 @@ db = client.dbsparta
 # HTML 화면 보여주기
 @app.route('/')
 def home():
+    return render_template('pminfo.html')
+
+@app.route('/default')
+def pminfo():
     return render_template('index.html')
 
 @app.route('/search')
 def search():
     return render_template('search.html')
-
-@app.route('/pminfo')
-def pminfo():
-    return render_template('pminfo.html')
 
 @app.route('/pmscrap', methods=['POST'])
 def scrap_pminfo():

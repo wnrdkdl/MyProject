@@ -2,8 +2,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>랜덤 숫자 뽑기</title>
+    <meta name="viewport" content="width=device-width, in
+    <meta property=" og:title
+    " content="나랑 내기할래? 랜덤 숫자 뽑기"/>
+    <meta property="og:description" content="랜덤으로 숫자를 뽑아 내기에 걸린 사람을 뽑아주는 웹 페이지입니다"/>
+    <meta property="og:image" content="{{ url_for('static', filename='main.png') }}"/>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -100,6 +104,7 @@
             width: 50px;
             height: 50px;
             border-radius: 30px;
+            box-shadow: 3px 5px 5px grey;
             margin: 10px;
             text-align: center;
             font-size: 30px;
@@ -140,32 +145,16 @@
         #pmtype {
             background-color: yellow;
         }
-
-        .tooltip{
-            pointer-events: none;
-           /* position: absolute;
-            z-index: -1;*/
-
-
-            /*bottom: 100%;
-            left: 50%;
-            margin-left: 200px;*/
-        }
     </style>
 
     <script>
-        $(document).ready( function () {
-            $('body').tooltip({
-                selector: '[data-toggle="tooltip"]',
-                //position: { my: "left+1100 center", at: "right center" }
+        let randomNumberMean = [];
+        $(document).ready(function () {
+            $('#random-result').on('mouseenter', '[id*="random-number"]', function () {
+                $('#mean').empty();
+                $('#mean').append(randomNumberMean[$(this).data('raw')]);
             })
-
-
         });
-
-        function returnPage() {
-            window.location.reload();
-        }
 
         function clickStart() {
             $('#title').remove();
@@ -201,6 +190,21 @@
                             </div>
                          </div>`;
             $('#main-page').append(tempHtml);
+        }
+
+        function makeCard(cnt, store, img, itemName, price, pmtype) {
+            const tempHtml = `<div class="card" style="width: 25rem;">
+                                    <img src=${img} class="card-img-top">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${store}</h5>
+                                        <p class="card-text">${itemName}</p>
+                                        <p class="card-text"><span id="pmtype">${pmtype}</span>&nbsp;&nbsp;${price}</p>
+                                    </div>
+                                </div>`;
+            if (cnt === 0) {
+                $('#pminfo').empty();
+            }
+            $('#pminfo').append(tempHtml);
         }
 
         function search() {
@@ -244,21 +248,6 @@
                     }
                 }
             })
-        }
-
-        function makeCard(cnt, store, img, itemName, price, pmtype) {
-            const tempHtml = `<div class="card" style="width: 25rem;">
-                                    <img src=${img} class="card-img-top">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${store}</h5>
-                                        <p class="card-text">${itemName}</p>
-                                        <p class="card-text"><span id="pmtype">${pmtype}</span>&nbsp;&nbsp;${price}</p>
-                                    </div>
-                                </div>`;
-            if (cnt === 0) {
-                $('#pminfo').empty();
-            }
-            $('#pminfo').append(tempHtml);
         }
 
         function startRamdom() {
@@ -353,10 +342,9 @@
             }
 
             let tempHtml = '';
-            let randomNumberMean = [];
             for (let i = 0; i < randomIndexArray.length; i++) {
                 const colorCode = '#' + Math.round(Math.random() * 0xffffff).toString(16);
-                tempHtml += `<div id="random-number${i}" data-placement="top" data-toggle="tooltip" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
+                tempHtml += `<div id="random-number${i}" data-raw="${i}" style="background-color: ${colorCode}">${randomIndexArray[i]}</div>`;
 
                 $.ajax({
                     type: "GET",
@@ -364,13 +352,20 @@
                     data: {},
                     success: function (response) {
                         randomNumberMean[i] = response;
-                        $('#random-number' + i ).attr('title', randomNumberMean[i]);
+                        $('#random-number' + i).attr('title', randomNumberMean[i]);
                     },
                 });
             }
 
             $('#random-result').empty();
             $('#random-result').append(tempHtml);
+
+            tempHtml = `<div id="numbersMean" class="col-xs-2-cs">
+                            <span id="mean">숫자 위에 마우스를 올려보세요.</span>
+                        </div>`;
+
+            $('#numbersMean-result').empty();
+            $('#numbersMean-result').append(tempHtml);
 
             tempHtml = '<hr>';
             $('#division').empty();
@@ -383,10 +378,13 @@
                             <input type="text" id="product" class="form-control form-control-search" placeholder="상품명"
                                    aria-describedby="button-addon2">
                             <button type="button" class="btn btn-primary" onclick="search()">검색</button>
-                        </div>
-`;
+                        </div>`;
             $('#bottom-page').empty();
             $('#bottom-page').append(tempHtml);
+        }
+
+        function returnPage() {
+            window.location.reload();
         }
     </script>
 </head>
@@ -400,6 +398,7 @@
 
         <div id="main-page"></div>
         <div id="random-result"></div>
+        <div id="numbersMean-result"></div>
         <div id="division"></div>
         <div id="bottom-page"></div>
         <div id="pminfo"></div>
