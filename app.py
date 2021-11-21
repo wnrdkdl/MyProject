@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request
+from googletrans import Translator
 
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ def home():
     return render_template('pminfo.html')
 
 @app.route('/default')
-def pminfo():
+def index():
     return render_template('index.html')
 
 @app.route('/search')
@@ -64,6 +65,13 @@ def scrap_pminfo():
 def showInfo():
     pminfos = list(db.pminfos.find({}, {"_id": False}))
     return jsonify({'result': 'success', 'pminfos': pminfos})
+
+@app.route('/trans', methods=['POST'])
+def translator():
+    translator = Translator()
+    mean_receive = request.form.get('mean_give')
+
+    return jsonify({'result': 'success', 'msg': translator.translate(mean_receive, src='en', dest='ko').text})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

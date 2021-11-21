@@ -165,9 +165,27 @@
     <script>
         let randomNumberMean = [];
         $(document).ready(function () {
+
+
             $('#random-result').on('mouseenter', '[id*="random-number"]', function () {
-                $('#mean').empty();
-                $('#mean').append(randomNumberMean[$(this).data('raw')]);
+                const msgEn = randomNumberMean[$(this).data('raw')];
+                if (randomNumberMean[0] != null) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/trans",
+                        data: {
+                            "mean_give": msgEn
+                        },
+                        success: function (response) {
+                            if (response["result"] == "success") {
+                                const msgKo = response["msg"];
+                                const tempHtml = `<div><span>${msgEn}</span><br><span>${msgKo}</span></div>`;
+                                 $('#mean').empty();
+                                 $('#mean').append(tempHtml);
+                            }
+                        }
+                    })
+                }
             })
         });
 
@@ -367,7 +385,6 @@
                     data: {},
                     success: function (response) {
                         randomNumberMean[i] = response;
-                        $('#random-number' + i).attr('title', randomNumberMean[i]);
                     },
                 });
             }
